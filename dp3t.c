@@ -116,7 +116,7 @@ void dp3t_create_ephids(void)
     wc_HmacFinal(&hmac, prf);
     /* PRG */
     wc_AesInit(&aes, NULL, INVALID_DEVID);
-    wc_AesSetKey(&aes, prf, 16, zeroes, 16);
+    wc_AesSetKey(&aes, prf, 16, zeroes, AES_ENCRYPTION);
     for (i = 0; i < EPOCHS_PER_DAY; i++) {
         wc_AesCtrEncrypt(&aes, EPHIDS_LOCAL[i], zeroes, EPHID_LEN); 
     }
