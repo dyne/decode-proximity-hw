@@ -90,7 +90,6 @@ int _cmd_scan(int argc, char **argv)
     nimble_scanlist_print();
     dp3t_scanlist_print();
     puts("");
-
     return 0;
 }
 
@@ -130,6 +129,18 @@ static const shell_command_t shell_commands[] = {
 
 int main(void)
 {
+    struct ble_gap_disc_params scan_params = {
+        .itvl = BLE_GAP_LIM_DISC_SCAN_INT,
+        .window = BLE_GAP_LIM_DISC_SCAN_WINDOW,
+        .filter_policy = 0,                         /* don't use */
+        .limited = 0,                               /* no limited discovery */
+        .passive = 0,                               /* no passive scanning */
+        . filter_duplicates = 0,                    /* no duplicate filtering */
+    };
+
+    /* initialize the nimble scanner */
+    nimble_scanlist_init();
+    nimble_scanner_init(&scan_params, nimble_scanlist_update);
     /* we need a message queue for the thread running the shell in order to
      * receive potentially fast incoming networking packets */
     msg_init_queue(_main_msg_queue, MAIN_QUEUE_SIZE);
