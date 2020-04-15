@@ -10,45 +10,40 @@
 
 <br><br>
 
-<h4 align="center">
-  <a href="#-install">💾 Install</a>
-  <span> • </span>
-  <a href="#-quick-start">🎮 Quick start</a>
-  <span> • </span>
-  <a href="#-configuration">🔧 Configuration</a>
-  <span> • </span>
-  <a href="#-testing">📋 Testing</a>
-  <span> • </span>
-  <a href="#-troubleshooting--debugging">🐛 Troubleshooting & debugging</a>
-  <span> • </span>
-  <a href="#-acknowledgements">😍 Acknowledgements</a>
-  <span> • </span>
-  <a href="#-links">🌐 Links</a>
-  <span> • </span>
-  <a href="#-contributing">👤 Contributing</a>
-  <span> • </span>
-  <a href="#-license">💼 License</a>
-</h4>
 
+This project is a privacy-preserving and decentralized alternative to the Dutch
+`#coronaApp`.
 
+It will adhere to the technological demands published last week in the
+[‘Veilig tegen corona’ manifesto](https://www.veiligtegencorona.nl/).
 
-This project is a privacy-preserving and decentralized alternative to the Dutch `#coronaApp`.
+The decode-proximity provides virus tracking and a warning system with a
+proximity alert. Every device broadcasts its proximity to other devices,
+privately recording when two people have been close (only the device owners
+know!).
 
-It will adhere to the technological demands published last week in the [‘Veilig tegen corona’ manifesto](https://www.veiligtegencorona.nl/).
+If a user gets an alert from the device they can request a test for a corona
+diagnosis. If positive they can scan a QRCode from the GGD to anonymously
+upload a notice for all other users that have been close to them, to let them
+know of the risk.
 
-The decode-proximity provides virus tracking and a warning system with a proximity alert. Every device broadcasts its proximity to other devices, privately recording when two people have been close (only the device owners know!).
+❗ Please note: there are NO personal data stored on the central server. The
+secret key and the ephemeral ids can NOT be traced to identifiable people.
 
-If a user gets an alert from the device they can request a test for a corona diagnosis. If positive they can scan a QRCode from the GGD to anonymously upload a notice for all other users that have been close to them, to let them know of the risk.
-
-❗ Please note: there are NO personal data stored on the central server. The secret key and the ephemeral ids can NOT be traced to identifiable people.
-
-We are also developing a hardware port (This repository) to allow usage as a keyring and without a mobile phone
+We are also developing a hardware port (This repository) to allow usage as a
+keyring and without a mobile phone
 
 Using RIOT-OS+nimble on Nordic nRF52.
 
 Using wolfSSL/wolfCrypt for TLS and crypto.
 
-🚧 This software is in **ALPHA stage** and are part of the [DECODE project](https://decodeproject.eu) about data-ownership and [technological sovereignty](https://www.youtube.com/watch?v=RvBRbwBm_nQ). Our effort is that of improving people's awareness of how their data is processed by algorithms, as well facilitate the work of developers to create along [privacy by design principles](https://decodeproject.eu/publications/privacy-design-strategies-decode-architecture) using algorithms that can be deployed in any situation without any change.
+🚧 This software is in **ALPHA stage** and are part of the
+[DECODE project](https://decodeproject.eu) about data-ownership and
+[technological sovereignty](https://www.youtube.com/watch?v=RvBRbwBm_nQ). Our
+effort is that of improving people's awareness of how their data is processed
+by algorithms, as well facilitate the work of developers to create along
+[privacy by design principles](https://decodeproject.eu/publications/privacy-design-strategies-decode-architecture)
+using algorithms that can be deployed in any situation without any change.
 
 
 <details id="toc">
@@ -57,6 +52,7 @@ Using wolfSSL/wolfCrypt for TLS and crypto.
 * [Install](#-install)
 * [Quick start](#-quick-start)
 * [Configuration](#-configuration)
+* [Hardware](#-hardware)
 * [Testing](#-testing)
 * [Troubleshooting & debugging](#-troubleshooting--debugging)
 * [Acknowledgements](#-acknowledgements)
@@ -72,14 +68,16 @@ Some dependencies are needed before you are able to build the project.
 
 ### Dependencies
 
-You need to clone the RIOT-OS project [More details](https://doc.riot-os.org/getting-started.html).
+You need to clone the RIOT-OS project
+[More details](https://doc.riot-os.org/getting-started.html).
 
 Once you cloned the repo you have to reference it in the `RIOTBASE` variable of
-the [Makefile](https://github.com/dyne/decode-proximity-hw/blob/master/Makefile#L8)
+the
+[Makefile](https://github.com/dyne/decode-proximity-hw/blob/master/Makefile#L8)
 
 
-The GNU Arm Embedded Toolchain is also needed available on most operative systems
-packaging systems eg.
+The GNU Arm Embedded Toolchain is also needed available on most operative
+systems packaging systems eg.
 
 ```bash
 gpt install gcc-arm-none-eabi
@@ -93,6 +91,12 @@ make
 ```
 This will download all the submodule needed projects and compile.
 
+### Flashing on device
+
+```bash
+make flash
+```
+
 ***
 ## 🎮 Quick start
 
@@ -100,6 +104,17 @@ This will download all the submodule needed projects and compile.
 
 ***
 ## 🔧 Configuration
+
+> TODO
+
+***
+
+## 📟 Hardware
+
+Below a brief list supported and tested hardware to begin with
+
+* [nRF52 DK](https://www.nordicsemi.com/Software-and-tools/Development-Kits/nRF52-DK)
+* [ARDUINO NANO 33 IOT](https://store.arduino.cc/arduino-nano-33-iot)
 
 ***
 
@@ -145,7 +160,7 @@ Please first take a look at the [Dyne.org - Contributor License Agreement](CONTR
 ***
 ## 💼 License
     DECODE Proximity embedded
-    Copyright (c) 2019 Dyne.org foundation, Amsterdam
+    Copyright (c) 2020 Dyne.org foundation, Amsterdam
 
     This program is free software; you can redistribute it and/or modify it
     under the terms of the GNU General Public License as published by the Free
