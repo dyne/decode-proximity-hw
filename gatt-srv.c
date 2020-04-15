@@ -1,25 +1,12 @@
 /*
+ * Copyright (C) 2020 Dyne.org foundation
  *
- * Copyright (C) 2020 Daniele Lacamera
- * Copyright (C) 2019 Freie Universität Berlin
- *
- * This file is subject to the terms and conditions of the GNU Lesser
- * General Public License v2.1. See the file LICENSE in the top level
- * directory for more details.
- *
- */
-
-/**
- * @ingroup     examples
- * @{
- *
- * @file
- * @brief       BLE simple DP-3T implementation
- *
- * @author      Daniele Lacamera <root@danielinux.net>
- *
+ * This file is subject to the terms and conditions of the GNU
+ * General Public License (GPL) version 2. See the file LICENSE
+ * for more details.
  *
  * Based on nimble RIOT example code by Hauke Petersen <hauke.petersen@fu-berlin.de>
+ * previously released under LGPL v2.1.
  *
  * @}
  */

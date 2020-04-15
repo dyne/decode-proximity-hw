@@ -1,23 +1,10 @@
-/*
- * Copyright (C) 2019 Daniele Lacamera
+/* 
+ * Copyright (C) 2020 Dyne.org foundation
  *
+ * This file is subject to the terms and conditions of the GNU
+ * General Public License (GPL) version 2. See the file LICENSE
+ * for more details.
  *
- * This file is subject to the terms and conditions of the GNU Lesser
- * General Public License v2.1. See the file LICENSE in the top level
- * directory for more details.
- */
-
-
-/**
- * @ingroup     examples
- * @{
- *
- * @file
- * @brief       Example application  for DTLS 1.2 using wolfSSL
- *
- * @author      Daniele Lacamera <daniele@wolfssl.com>
- *
- * @}
  */
 
 #include <wolfssl/ssl.h>
