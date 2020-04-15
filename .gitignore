@@ -1,0 +1,70 @@
+# Object files
+*.o
+# Documentation artifacts
+doc/doxygen/html
+doc/doxygen/latex
+doc/doxygen/man
+doc/doxygen/*.log
+doc/doxygen/*.db
+doc/doxygen/*.tmp
+# Built binaries
+*bin
+# Build directory
+/build
+# Backup files
+*~
+*.orig
+.*.swp
+cachegrind.out*
+# Eclipse workspace files
+.project
+.cproject
+.settings
+.idea
+# KDevelop4 project files
+.kdev4
+*.kdev4
+# Codelite (among others) project files
+*.project
+# Visual Studio Code user settings
+.vscode/
+# ctags index files
+tags
+# GDB initialization scripts
+.gdbinit
+
+# Eclipse symbol file (output from make eclipsesym)
+eclipsesym.xml
+/toolchain
+# Ignore created Arduino sketch files
+_sketches.cpp
+
+# local override files
+Makefile.local
+
+# Vagrant
+.vagrant
+
+# clang-complete command line argument lists (Vim: clang-complete, Atom: linter-clang, autocomplete-clang addons)
+.clang_complete
+# YouCompleteMe (https://github.com/Valloric/YouCompleteMe)
+.ycm_extra_conf.py
+
+# Python compiled files
+*.pyc
+
+# Ignore download cache
+.dlcache
+
+# scan-build artifacts
+scan-build/
+
+# compile_and_test_for_boards default "results" directory
+results/
+
+# mypy artifacts
+.mypy_cache/
+
+# Clangd compile flags (language server)
+compile_commands.json
+compile_flags.txt
