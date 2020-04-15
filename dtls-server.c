@@ -4,6 +4,7 @@
  * This file is subject to the terms and conditions of the GNU
  * General Public License (GPL) version 2. See the file LICENSE
  * for more details.
+ *
  */
 
 #include <wolfssl/ssl.h>
@@ -83,7 +84,7 @@ int dtls_server(int argc, char **argv)
     (void)argv;
 
     if (sock_dtls_create(sk, &local, NULL, 0, wolfDTLSv1_2_server_method()) != 0) {
-        LOG(LOG_ERROR, "ERROR: Unable to create DTLS sock\r\n");
+        LOG(LOG_ERROR, "ERROR: Unable to create DTLS sock\n");
         return -1;
     }
 
@@ -92,7 +93,7 @@ int dtls_server(int argc, char **argv)
     if (wolfSSL_CTX_use_certificate_buffer(sk->ctx, server_cert,
                 server_cert_len, SSL_FILETYPE_ASN1 ) != SSL_SUCCESS)
     {
-        LOG(LOG_ERROR, "Failed to load certificate from memory.\r\n");
+        LOG(LOG_ERROR, "Failed to load certificate from memory.\n");
         return -1;
     }
 
@@ -100,7 +101,7 @@ int dtls_server(int argc, char **argv)
     if (wolfSSL_CTX_use_PrivateKey_buffer(sk->ctx, server_key,
                 server_key_len, SSL_FILETYPE_ASN1 ) != SSL_SUCCESS)
     {
-        LOG(LOG_ERROR, "Failed to load private key from memory.\r\n");
+        LOG(LOG_ERROR, "Failed to load private key from memory.\n");
         return -1;
     }
 #else
@@ -112,7 +113,7 @@ int dtls_server(int argc, char **argv)
     ret = sock_dtls_session_create(sk);
     if (ret < 0)
     {
-        LOG(LOG_ERROR, "Failed to create DTLS session (err: %s)\r\n", strerror(-ret));
+        LOG(LOG_ERROR, "Failed to create DTLS session (err: %s)\n", strerror(-ret));
         return -1;
     }
 
@@ -130,19 +131,19 @@ int dtls_server(int argc, char **argv)
         }
 
         /* Wait until data is received */
-        LOG(LOG_INFO, "Connection accepted\r\n");
+        LOG(LOG_INFO, "Connection accepted\n");
         ret = wolfSSL_read(sk->ssl, buf, APP_DTLS_BUF_SIZE);
         if (ret > 0) {
             buf[ret] = (char)0;
-            LOG(LOG_INFO, "Received '%s'\r\n", buf);
+            LOG(LOG_INFO, "Received '%s'\n", buf);
         }
 
         /* Send reply */
-        LOG(LOG_INFO, "Sending 'DTLS OK'...\r\n");
+        LOG(LOG_INFO, "Sending 'DTLS OK'...\n");
         wolfSSL_write(sk->ssl, Test_dtls_string, sizeof(Test_dtls_string));
 
         /* Cleanup/shutdown */
-        LOG(LOG_INFO, "Closing connection.\r\n");
+        LOG(LOG_INFO, "Closing connection.\n");
         sock_dtls_session_destroy(sk);
         sock_dtls_close(sk);
         break;
