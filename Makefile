@@ -49,13 +49,13 @@ USEMODULE += wolfssl_dtls
 # Select public key algorithm (or PSK) support fot ciphersuite(s):
 #USEMODULE += wolfcrypt_ecc
 #USEMODULE += wolfcrypt_rsa wolfcrypt_dh
-USEMODULE += wolfcrypt_hmac wolfcrypt_aes_ctr
+USEMODULE += wolfcrypt_hmac wolfcrypt_aes_ctr wolfcrypt_aes
 USEMODULE += wolfssl_psk
 
 # Uncomment the following line to add debug symbols
 #CFLAGS+=-g -ggdb3
 
-CFLAGS += -DDTLS_DEFAULT_PORT=$(DTLS_PORT) -DDTLS_WOLFSSL -Wno-unused-parameter -Wno-unused-variable
+CFLAGS += -DDTLS_DEFAULT_PORT=$(DTLS_PORT) -DDTLS_WOLFSSL -Wno-unused-parameter -Wno-unused-variable -DWOLFSSL_AES_COUNTER
 
 # A larger stack size is required if using ECC or RSA
 CFLAGS += -DTHREAD_STACKSIZE_MAIN=\(3*THREAD_STACKSIZE_DEFAULT\)

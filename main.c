@@ -1,4 +1,4 @@
-/* 
+/*
  * Copyright (C) 2020 Dyne.org foundation
  *
  * This file is subject to the terms and conditions of the GNU
@@ -6,18 +6,21 @@
  * for more details.
  *
  */
-
 #include <wolfssl/ssl.h>
+#include <wolfssl/wolfcrypt/sha256.h>
 
 #include "shell.h"
 #include "msg.h"
 #include "nimble_scanner.h"
 #include "net/bluetil/ad.h"
 #include "nimble_scanlist.h"
+#include "dp3t.h"
+
+
+/*** SCAN ***/
 
 /* default scan duration (1s) */
 #define DEFAULT_DURATION        (1000000U)
-
 
 void dp3t_print_entry(int *idx, nimble_scanlist_entry_t *e)
 {
@@ -39,22 +42,23 @@ void dp3t_print_entry(int *idx, nimble_scanlist_entry_t *e)
         } else {
             printf("[%02d] DP-3T: %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X\r\n",
                    (*idx)++,
-                   peer_ephid[0], 
-                   peer_ephid[1], 
-                   peer_ephid[2], 
-                   peer_ephid[3], 
-                   peer_ephid[4], 
-                   peer_ephid[5], 
-                   peer_ephid[6], 
-                   peer_ephid[7], 
-                   peer_ephid[8], 
-                   peer_ephid[9], 
-                   peer_ephid[10], 
-                   peer_ephid[11], 
-                   peer_ephid[12], 
-                   peer_ephid[13], 
-                   peer_ephid[14], 
-                   peer_ephid[15]); 
+                   peer_ephid[0],
+                   peer_ephid[1],
+                   peer_ephid[2],
+                   peer_ephid[3],
+                   peer_ephid[4],
+                   peer_ephid[5],
+                   peer_ephid[6],
+                   peer_ephid[7],
+                   peer_ephid[8],
+                   peer_ephid[9],
+                   peer_ephid[10],
+                   peer_ephid[11],
+                   peer_ephid[12],
+                   peer_ephid[13],
+                   peer_ephid[14],
+                   peer_ephid[15]);
+            /* TODO: receive ephid */
         }
     }
 }
@@ -93,10 +97,6 @@ int _cmd_scan(int argc, char **argv)
     return 0;
 }
 
-#ifdef WITH_RIOT_SOCKETS
-#error RIOT-OS is set to use sockets but this DTLS app is configured for socks.
-#endif
-
 #define MAIN_QUEUE_SIZE     (8)
 static msg_t _main_msg_queue[MAIN_QUEUE_SIZE];
 
@@ -113,13 +113,12 @@ static int wolftest(int argc, char **argv)
     return 0;
 }
 #endif
-extern int gatt_server(int argc, char *argv[]);
+extern int gatt_server(void);
 
 static const shell_command_t shell_commands[] = {
     { "dtlsc", "Start a DTLS client", dtls_client },
     { "dtlss", "Start and stop a DTLS server", dtls_server },
     { "scan", "trigger a BLE scan", _cmd_scan },
-    { "srv", "Start gatt server", gatt_server },
 #ifdef MODULE_WOLFCRYPT_TEST
     { "wolftest", "Perform wolfcrypt porting test", wolftest },
 #endif
@@ -129,6 +128,7 @@ static const shell_command_t shell_commands[] = {
 
 int main(void)
 {
+    uint8_t *ephid, *sk_t0;
     struct ble_gap_disc_params scan_params = {
         .itvl = BLE_GAP_LIM_DISC_SCAN_INT,
         .window = BLE_GAP_LIM_DISC_SCAN_WINDOW,
@@ -144,9 +144,14 @@ int main(void)
     /* we need a message queue for the thread running the shell in order to
      * receive potentially fast incoming networking packets */
     msg_init_queue(_main_msg_queue, MAIN_QUEUE_SIZE);
-    printf("RIOT wolfSSL DTLS testing implementation\r\n");
     wolfSSL_Init();
     wolfSSL_Debugging_ON();
+
+    /* dp3t */
+    dp3t_create_ephids();
+
+    /* Start Bluetooth service by default */
+    gatt_server();
 
     /* start shell */
     printf( "All up, running the shell now\r\n");

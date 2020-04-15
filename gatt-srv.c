@@ -5,9 +5,6 @@
  * General Public License (GPL) version 2. See the file LICENSE
  * for more details.
  *
- * Based on nimble RIOT example code by Hauke Petersen <hauke.petersen@fu-berlin.de>
- * previously released under LGPL v2.1.
- *
  * @}
  */
 
@@ -23,17 +20,15 @@
 #include "host/ble_gatt.h"
 #include "services/gap/ble_svc_gap.h"
 #include "services/gatt/ble_svc_gatt.h"
+#include "dp3t.h"
 
 #define HRS_FLAGS_DEFAULT       (0x01)      /* 16-bit BPM value */
 #define SENSOR_LOCATION         (0x02)      /* wrist sensor */
 #define UPDATE_INTERVAL         (250U * US_PER_MS)
 
-static const char *_device_name = "DP3T";
-static const char *_manufacturer_name = "DP3T Group";
-static const char *_model_number = "2A";
-static const char *_serial_number = "a8b302c7f3-29183-x8";
-static const char *_fw_ver = "0.0.1";
-static const char *_hw_ver = "NordicDK";
+static const char *device_name = "DP3T";
+static const char *_manufacturer_name = "Dyne.org";
+static const char *_model_number = "1";
 
 static event_queue_t _eq;
 static event_t _update_evt;
@@ -45,7 +40,7 @@ static uint16_t _hrs_val_handle;
 static int _devinfo_handler(uint16_t conn_handle, uint16_t attr_handle,
                             struct ble_gatt_access_ctxt *ctxt, void *arg);
 
-static void _start_advertising(void);
+static void start_advertising(void);
 
 /* GATT service definitions */
 static const struct ble_gatt_svc_def gatt_svr_svcs[] = {
@@ -99,18 +94,6 @@ static int _devinfo_handler(uint16_t conn_handle, uint16_t attr_handle,
             puts("[READ] device information service: model number value");
             str = _model_number;
             break;
-        case BLE_GATT_CHAR_SERIAL_NUMBER_STR:
-            puts("[READ] device information service: serial number value");
-            str = _serial_number;
-            break;
-        case BLE_GATT_CHAR_FW_REV_STR:
-            puts("[READ] device information service: firmware revision value");
-            str = _fw_ver;
-            break;
-        case BLE_GATT_CHAR_HW_REV_STR:
-            puts("[READ] device information service: hardware revision value");
-            str = _hw_ver;
-            break;
         default:
             return BLE_ATT_ERR_UNLIKELY;
     }
@@ -126,7 +109,7 @@ static int gap_event_cb(struct ble_gap_event *event, void *arg)
     return 0;
 }
 
-static void _start_advertising(void)
+static void start_advertising(void)
 {
     struct ble_gap_adv_params advp;
     int res;
@@ -142,17 +125,12 @@ static void _start_advertising(void)
     (void)res;
 }
 
-int gatt_server(int argc, char *argv[])
+int gatt_server(void)
 {
     int res = 0;
     uint8_t buf[31];
 //    uint16_t hdr_uuid = BLE_GAP_AD_UUID128_INCOMP;
     uint16_t hdr_uuid = 0xFF;
-    uint8_t EphId[17] = { 0, 1, 2, 3, 4,
-                          5, 6, 7, 8, 9,
-                          0xa, 0xb, 0xc, 0xd, 
-                          0xe, 0xf
-    };
 
     puts("BLE DP3T service started");
     /* verify and add our custom services */
@@ -162,19 +140,19 @@ int gatt_server(int argc, char *argv[])
     assert(res == 0);
 
     /* set the device name */
-    ble_svc_gap_device_name_set(_device_name);
+    ble_svc_gap_device_name_set(device_name);
     /* reload the GATT server to link our added services */
     ble_gatts_start();
 
     /* configure and set the advertising data */
     bluetil_ad_t ad;
     bluetil_ad_init_with_flags(&ad, buf, sizeof(buf), BLUETIL_AD_FLAGS_DEFAULT);
-    bluetil_ad_add_name(&ad, _device_name);
-    bluetil_ad_add(&ad, hdr_uuid, &EphId, sizeof(EphId));
+    bluetil_ad_add_name(&ad, device_name);
+    bluetil_ad_add(&ad, hdr_uuid, dp3t_get_ephid(0), EPHID_LEN);
     ble_gap_adv_set_data(ad.buf, ad.pos);
 
     /* start to advertise this node */
-    _start_advertising();
+    start_advertising();
 
     /* run an event loop for handling the heart rate update events */
     //event_loop(&_eq);
