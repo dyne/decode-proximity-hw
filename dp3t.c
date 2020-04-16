@@ -125,34 +125,22 @@ void dp3t_print_ephids(void)
 
 void dp3t_create_ephids(const uint8_t *skt_0)
 {
-    unsigned buffer_size = EPHID_LEN * MAX_EPHIDS;
     Aes aes;
     Hmac hmac;
-    uint8_t prf[SK_LEN], sk1[SK_LEN];
+    uint8_t prf[SK_LEN];
     int i;
     uint8_t zeroes[EPHID_LEN];
-    memset(zeroes, 0, SK_LEN);
+    memset(zeroes, 0, EPHID_LEN);
     printf("SK0: ");
     print_sk(skt_0);
 
     /* PRF */
     wc_HmacInit(&hmac, NULL, INVALID_DEVID); 
     wc_HmacSetKey(&hmac, WC_SHA256, skt_0, SK_LEN);
-    wc_HmacSetKey(&hmac, WC_SHA256, zeroes, 32);
-
-    printf("Broadcast key: ");
-    print_hex(BROADCAST_KEY, BROADCAST_KEY_LEN);
-    printf("Zeroes: ");
-    print_hex(zeroes, 32);
     wc_HmacUpdate(&hmac, BROADCAST_KEY, BROADCAST_KEY_LEN);
     wc_HmacFinal(&hmac, prf);
     printf("  PRF: ");
     print_sk(prf);
-
-    /* Rotation test */
-    dp3t_get_skt_1(skt_0, sk1);
-    printf("  SK Derivation: ");
-    print_sk(sk1);
 
     /* PRG */
     wc_AesInit(&aes, NULL, INVALID_DEVID);
