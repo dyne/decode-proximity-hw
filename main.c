@@ -73,7 +73,7 @@ void dp3t_scanlist_print(void)
     }
 }
 
-int _cmd_scan(int argc, char **argv)
+int cmd_scan(int argc, char **argv)
 {
     uint32_t timeout = DEFAULT_DURATION;
 
@@ -94,6 +94,13 @@ int _cmd_scan(int argc, char **argv)
     nimble_scanlist_print();
     dp3t_scanlist_print();
     puts("");
+    return 0;
+}
+
+int cmd_testvec(int argc, char **argv)
+{
+    uint8_t testkey[32] = { }; /* zeros */
+    dp3t_create_ephids(testkey);
     return 0;
 }
 
@@ -118,7 +125,8 @@ extern int gatt_server(void);
 static const shell_command_t shell_commands[] = {
     { "dtlsc", "Start a DTLS client", dtls_client },
     { "dtlss", "Start and stop a DTLS server", dtls_server },
-    { "scan", "trigger a BLE scan", _cmd_scan },
+    { "scan", "trigger a BLE scan", cmd_scan },
+    { "testvec", "print test vectors", cmd_testvec },
 #ifdef MODULE_WOLFCRYPT_TEST
     { "wolftest", "Perform wolfcrypt porting test", wolftest },
 #endif
@@ -148,7 +156,8 @@ int main(void)
     wolfSSL_Debugging_ON();
 
     /* dp3t */
-    dp3t_create_ephids();
+    sk_t0 = dp3t_get_skt_0();
+    dp3t_create_ephids(sk_t0);
 
     /* Start Bluetooth service by default */
     gatt_server();

@@ -51,11 +51,12 @@ USEMODULE += wolfssl_dtls
 #USEMODULE += wolfcrypt_rsa wolfcrypt_dh
 USEMODULE += wolfcrypt_hmac wolfcrypt_aes_ctr wolfcrypt_aes
 USEMODULE += wolfssl_psk
+USEMODULE += wolfcrypt-test
 
 # Uncomment the following line to add debug symbols
 #CFLAGS+=-g -ggdb3
 
-CFLAGS += -DDTLS_DEFAULT_PORT=$(DTLS_PORT) -DDTLS_WOLFSSL -Wno-unused-parameter -Wno-unused-variable -DWOLFSSL_AES_COUNTER
+CFLAGS += -DDTLS_DEFAULT_PORT=$(DTLS_PORT) -DDTLS_WOLFSSL -Wno-unused-parameter -Wno-unused-variable -DWOLFSSL_AES_COUNTER -DWOLFSSL_AES_DIRECT
 
 # A larger stack size is required if using ECC or RSA
 CFLAGS += -DTHREAD_STACKSIZE_MAIN=\(3*THREAD_STACKSIZE_DEFAULT\)

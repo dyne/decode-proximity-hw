@@ -35,39 +35,31 @@ static uint8_t SKT_0[SK_LEN] = {};
 static int keystore_initialized = 0;
 static int day_ephid_table = -1;
 
-const uint8_t zeroes[SK_LEN] = {};
-const uint8_t BROADCAST_KEY[] = "Broadcast key";
+const uint8_t BROADCAST_KEY[32] = "Broadcast key";
 const uint32_t BROADCAST_KEY_LEN = 13;
 
 void dp3t_random(uint8_t *buf, int len)
 {
-    uint8_t val[4];
-    uint32_t *vu32 = (uint32_t *)val;
+    uint8_t val;
     int i = 0;
-    
+
+    /* Clear VALRDY */
+    TRNG_EV_VALRDY = 0;
     /* Start TRNG */
     TRNG_TASKS_START = 1;
-
-    for (;;) {
+    for (i = 0; i < len; i++) {
         /* Wait until value ready */
         while (TRNG_EV_VALRDY == 0)
             ;
-        *vu32 = TRNG_VALUE;
-        if (len >= 4)
-            memcpy(buf + i, val, 4);
-        else
-            memcpy(buf + i, val, len);
-        len -=4;
-        i += 4;
-        if (len <= 0)
-            break;
+        buf[i] = (uint8_t)(TRNG_VALUE & 0x000000FF);
+        TRNG_EV_VALRDY = 0;
     }
     TRNG_TASKS_STOP |= 1;
 }
 
 
 
-static uint8_t EPHIDS_LOCAL[MAX_EPHIDS][EPHID_LEN];
+static uint8_t EPHIDS_LOCAL[EPOCHS_PER_DAY][EPHID_LEN];
 
 /* 
  * SKT0 is random at every power-on now
@@ -94,33 +86,84 @@ void dp3t_get_skt_1(const uint8_t *skt_0, uint8_t *skt_1)
     int ret;
     wc_Sha256 sha;
     uint8_t digest[SHA256_LEN];
-    ret = wc_InitSha256_ex(&sha, NULL, INVALID_DEVID);
-    assert(ret > 0);
+    ret = wc_InitSha256(&sha);
+    assert(ret == 0);
     ret = wc_Sha256Update(&sha, skt_0, SK_LEN);
-    assert(ret > 0);
+    assert(ret == 0);
     wc_Sha256Final(&sha, skt_1);
     wc_Sha256Free(&sha);
 }
 
-void dp3t_create_ephids(void)
+static void print_hex(const uint8_t *x, int len)
+{
+    int i;
+    for(i = 0; i < len; i++) {
+        printf("%02x",x[i]);
+    }
+    printf("\n");
+}
+
+static void print_ephid(const uint8_t *x)
+{
+    print_hex(x, EPHID_LEN);
+}
+
+static void print_sk(const uint8_t *x)
+{
+    print_hex(x, SK_LEN);
+}
+
+
+void dp3t_print_ephids(void)
+{
+    int i;
+    for (i = 0; i < EPOCHS_PER_DAY; i++) {
+        printf("[ %03d ] ", i);
+        print_ephid(EPHIDS_LOCAL[i]);
+    }
+}
+
+void dp3t_create_ephids(const uint8_t *skt_0)
 {
     unsigned buffer_size = EPHID_LEN * MAX_EPHIDS;
     Aes aes;
     Hmac hmac;
-    uint8_t prf[SK_LEN], prg[SK_LEN];
+    uint8_t prf[SK_LEN], sk1[SK_LEN];
     int i;
+    uint8_t zeroes[EPHID_LEN];
+    memset(zeroes, 0, SK_LEN);
+    printf("SK0: ");
+    print_sk(skt_0);
+
     /* PRF */
     wc_HmacInit(&hmac, NULL, INVALID_DEVID); 
-    wc_HmacSetKey(&hmac, WC_SHA256, dp3t_get_skt_0(), SK_LEN);
+    wc_HmacSetKey(&hmac, WC_SHA256, skt_0, SK_LEN);
+    wc_HmacSetKey(&hmac, WC_SHA256, zeroes, 32);
+
+    printf("Broadcast key: ");
+    print_hex(BROADCAST_KEY, BROADCAST_KEY_LEN);
+    printf("Zeroes: ");
+    print_hex(zeroes, 32);
     wc_HmacUpdate(&hmac, BROADCAST_KEY, BROADCAST_KEY_LEN);
     wc_HmacFinal(&hmac, prf);
+    printf("  PRF: ");
+    print_sk(prf);
+
+    /* Rotation test */
+    dp3t_get_skt_1(skt_0, sk1);
+    printf("  SK Derivation: ");
+    print_sk(sk1);
+
     /* PRG */
     wc_AesInit(&aes, NULL, INVALID_DEVID);
-    wc_AesSetKey(&aes, prf, 16, zeroes, AES_ENCRYPTION);
-    for (i = 0; i < EPOCHS_PER_DAY; i++) {
-        wc_AesCtrEncrypt(&aes, EPHIDS_LOCAL[i], zeroes, EPHID_LEN); 
-    }
+    wc_AesSetKeyDirect(&aes, prf, 32, zeroes, AES_ENCRYPTION);
+    for(i = 0; i < EPOCHS_PER_DAY; i++)
+        wc_AesCtrEncrypt(&aes, EPHIDS_LOCAL[i], zeroes, 16); 
+    dp3t_print_ephids();
+    wc_HmacFree(&hmac);
+    wc_AesFree(&aes);
 }
+
 
 uint8_t *dp3t_get_ephid(int epoch)
 {
