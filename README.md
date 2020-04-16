@@ -113,8 +113,23 @@ make flash
 
 Below a brief list supported and tested hardware to begin with
 
-* [nRF52 DK](https://www.nordicsemi.com/Software-and-tools/Development-Kits/nRF52-DK)
-* [ARDUINO NANO 33 IOT](https://store.arduino.cc/arduino-nano-33-iot)
+**nRF52 DK** :heavy_check_mark:
+
+<img height=80 alt="nRF52 DK" src="https://www.nordicsemi.com/-/media/Images/Products/DevKits/nRF52-Series/nRF52-DK/nRF52-DK.png?h=530&la=en&mw=350&w=350&hash=48D397A047A718030261F80211DC881F8EFEA55D">
+
+https://www.nordicsemi.com/Software-and-tools/Development-Kits/nRF52-DK
+
+**Arduino NANO 33 IoT** :heavy_check_mark:
+
+<img height=80 alt="nRF52 DK" src="https://store-cdn.arduino.cc/uni/catalog/product/cache/1/image/500x375/f8876a31b63532bbba4e781c30024a0a/a/b/abx00027_iso_1.jpg">
+
+https://store.arduino.cc/arduino-nano-33-iot
+
+**Pinetime** :white_check_mark:
+
+<img height=80 alt="nRF52 DK" src="https://www.cnx-software.com/wp-content/uploads/2019/09/PineTime.jpg">
+
+https://www.pine64.org/pinetime/
 
 ***
 
