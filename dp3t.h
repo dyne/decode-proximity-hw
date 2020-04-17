@@ -14,6 +14,7 @@
 #define SHA256_LEN 32
 #define EPHID_LEN 16
 
+void dp3t_random(uint8_t *buf, int len);
 uint8_t *dp3t_get_skt_0(void);
 void    dp3t_get_skt_1(const uint8_t *skt_0, uint8_t *skt_1);
 void    dp3t_create_ephids(const uint8_t *skt_0);

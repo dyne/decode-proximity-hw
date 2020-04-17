@@ -35,31 +35,27 @@ void dp3t_print_entry(int *idx, nimble_scanlist_entry_t *e)
     if (res != BLUETIL_AD_OK) {
         strncpy(name, "undefined", sizeof(name));
     }
-    if (strncmp(name, "DP3T", 4) == 0) {
-        res = bluetil_ad_find_str(&ad, 0xFF, peer_ephid, sizeof(peer_ephid));
-        if (res != BLUETIL_AD_OK) {
-            printf("[%02d] DP-3T: Invalid UUID\r\n", (*idx)++);
-        } else {
-            printf("[%02d] DP-3T: %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X\r\n",
-                   (*idx)++,
-                   peer_ephid[0],
-                   peer_ephid[1],
-                   peer_ephid[2],
-                   peer_ephid[3],
-                   peer_ephid[4],
-                   peer_ephid[5],
-                   peer_ephid[6],
-                   peer_ephid[7],
-                   peer_ephid[8],
-                   peer_ephid[9],
-                   peer_ephid[10],
-                   peer_ephid[11],
-                   peer_ephid[12],
-                   peer_ephid[13],
-                   peer_ephid[14],
-                   peer_ephid[15]);
-            /* TODO: receive ephid */
-        }
+    res = bluetil_ad_find_str(&ad, BLE_GAP_AD_UUID128_COMP, peer_ephid, sizeof(peer_ephid));
+    if (res == BLUETIL_AD_OK) {
+        printf("[%02d] DP-3T: %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X %02X\r\n",
+                (*idx)++,
+                peer_ephid[0],
+                peer_ephid[1],
+                peer_ephid[2],
+                peer_ephid[3],
+                peer_ephid[4],
+                peer_ephid[5],
+                peer_ephid[6],
+                peer_ephid[7],
+                peer_ephid[8],
+                peer_ephid[9],
+                peer_ephid[10],
+                peer_ephid[11],
+                peer_ephid[12],
+                peer_ephid[13],
+                peer_ephid[14],
+                peer_ephid[15]);
+        /* TODO: receive ephid */
     }
 }
 

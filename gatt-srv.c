@@ -129,8 +129,10 @@ int gatt_server(void)
 {
     int res = 0;
     uint8_t buf[31];
-//    uint16_t hdr_uuid = BLE_GAP_AD_UUID128_INCOMP;
-    uint16_t hdr_uuid = 0xFF;
+    uint16_t hdr_txpow = BLE_GAP_AD_TX_POWER_LEVEL;
+    uint16_t hdr_uuid = BLE_GAP_AD_UUID128_COMP;
+    uint8_t tx_pow = 0x00;
+    uint8_t addr[6];
 
     puts("BLE DP3T service started");
     /* verify and add our custom services */
@@ -140,14 +142,17 @@ int gatt_server(void)
     assert(res == 0);
 
     /* set the device name */
-    ble_svc_gap_device_name_set(device_name);
+    ble_svc_gap_device_name_set("");
+
     /* reload the GATT server to link our added services */
     ble_gatts_start();
+    dp3t_random(addr, 6);
+    ble_hs_id_set_rnd(addr);
 
     /* configure and set the advertising data */
     bluetil_ad_t ad;
-    bluetil_ad_init_with_flags(&ad, buf, sizeof(buf), BLUETIL_AD_FLAGS_DEFAULT);
-    bluetil_ad_add_name(&ad, device_name);
+    bluetil_ad_init_with_flags(&ad, buf, sizeof(buf), BLE_GAP_DISCOVERABLE);
+    bluetil_ad_add(&ad, hdr_txpow, &tx_pow, 1);
     bluetil_ad_add(&ad, hdr_uuid, dp3t_get_ephid(0), EPHID_LEN);
     ble_gap_adv_set_data(ad.buf, ad.pos);
 
