@@ -21,6 +21,8 @@
 #include "services/gap/ble_svc_gap.h"
 #include "services/gatt/ble_svc_gatt.h"
 #include "dp3t.h"
+#include "random.h"
+#include "keystore.h"
 
 #define HRS_FLAGS_DEFAULT       (0x01)      /* 16-bit BPM value */
 #define SENSOR_LOCATION         (0x02)      /* wrist sensor */
@@ -87,11 +89,11 @@ static int _devinfo_handler(uint16_t conn_handle, uint16_t attr_handle,
 
     switch (ble_uuid_u16(ctxt->chr->uuid)) {
         case BLE_GATT_CHAR_MANUFACTURER_NAME:
-            puts("[READ] device information service: manufacturer name value");
+            //printf("[READ] device information service: manufacturer name value");
             str = _manufacturer_name;
             break;
         case BLE_GATT_CHAR_MODEL_NUMBER_STR:
-            puts("[READ] device information service: model number value");
+            //printf("[READ] device information service: model number value");
             str = _model_number;
             break;
         default:
@@ -134,7 +136,7 @@ int gatt_server(void)
     uint8_t tx_pow = 0x00;
     uint8_t addr[6];
 
-    puts("BLE DP3T service started");
+    //printf("BLE DP3T service started");
     /* verify and add our custom services */
     res = ble_gatts_count_cfg(gatt_svr_svcs);
     assert(res == 0);
@@ -146,7 +148,7 @@ int gatt_server(void)
 
     /* reload the GATT server to link our added services */
     ble_gatts_start();
-    dp3t_random(addr, 6);
+    sys_random(addr, 6);
     ble_hs_id_set_rnd(addr);
 
     /* configure and set the advertising data */

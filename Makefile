@@ -51,10 +51,11 @@ USEMODULE += wolfssl_dtls
 #USEMODULE += wolfcrypt_rsa wolfcrypt_dh
 USEMODULE += wolfcrypt_hmac wolfcrypt_aes_ctr wolfcrypt_aes
 USEMODULE += wolfssl_psk
-USEMODULE += wolfcrypt-test
+#USEMODULE += wolfcrypt-test
 
 # Uncomment the following line to add debug symbols
-#CFLAGS+=-g -ggdb3
+CFLAGS+=-g -ggdb3
+#CFLAGS+=-Os
 
 CFLAGS += -DDTLS_DEFAULT_PORT=$(DTLS_PORT) -DDTLS_WOLFSSL -Wno-unused-parameter -Wno-unused-variable -DWOLFSSL_AES_COUNTER -DWOLFSSL_AES_DIRECT
 

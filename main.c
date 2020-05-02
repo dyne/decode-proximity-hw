@@ -14,11 +14,13 @@
 #include "nimble_scanner.h"
 #include "net/bluetil/ad.h"
 #include "nimble_scanlist.h"
+
+#include "dp3t-config.h"
 #include "dp3t.h"
+#include "keystore.h"
 
 
 /*** SCAN ***/
-
 /* default scan duration (1s) */
 #define DEFAULT_DURATION        (1000000U)
 
@@ -96,7 +98,7 @@ int cmd_scan(int argc, char **argv)
 int cmd_testvec(int argc, char **argv)
 {
     uint8_t testkey[32] = { }; /* zeros */
-    dp3t_create_ephids(testkey);
+    dp3t_generate_beacons(testkey, 0);
     return 0;
 }
 
@@ -129,6 +131,7 @@ static const shell_command_t shell_commands[] = {
     { NULL, NULL, NULL }
 };
 
+char line_buf[SHELL_DEFAULT_BUFSIZE];
 
 int main(void)
 {
@@ -153,14 +156,13 @@ int main(void)
 
     /* dp3t */
     sk_t0 = dp3t_get_skt_0();
-    dp3t_create_ephids(sk_t0);
+    dp3t_generate_beacons(sk_t0, 0);
 
     /* Start Bluetooth service by default */
     gatt_server();
 
     /* start shell */
     printf( "All up, running the shell now\r\n");
-    char line_buf[SHELL_DEFAULT_BUFSIZE];
     shell_run(shell_commands, line_buf, SHELL_DEFAULT_BUFSIZE);
     /* should be never reached */
     return 0;
