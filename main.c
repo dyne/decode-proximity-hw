@@ -95,12 +95,6 @@ int cmd_scan(int argc, char **argv)
     return 0;
 }
 
-int cmd_testvec(int argc, char **argv)
-{
-    uint8_t testkey[32] = { }; /* zeros */
-    dp3t_generate_beacons(testkey, 0);
-    return 0;
-}
 
 #define MAIN_QUEUE_SIZE     (8)
 static msg_t _main_msg_queue[MAIN_QUEUE_SIZE];
@@ -124,7 +118,8 @@ static const shell_command_t shell_commands[] = {
     { "dtlsc", "Start a DTLS client", dtls_client },
     { "dtlss", "Start and stop a DTLS server", dtls_server },
     { "scan", "trigger a BLE scan", cmd_scan },
-    { "testvec", "print test vectors", cmd_testvec },
+    { "testvec", "print test vectors", dp3t_shellcmd_testvec },
+    { "rekey", "regenerate DP3T secure key", dp3t_shellcmd_rekey },
 #ifdef MODULE_WOLFCRYPT_TEST
     { "wolftest", "Perform wolfcrypt porting test", wolftest },
 #endif
@@ -155,11 +150,10 @@ int main(void)
     wolfSSL_Debugging_ON();
 
     /* dp3t */
-    sk_t0 = dp3t_get_skt_0();
-    dp3t_generate_beacons(sk_t0, 0);
+    dp3t_start();
 
     /* Start Bluetooth service by default */
-    gatt_server();
+    //gatt_server();
 
     /* start shell */
     printf( "All up, running the shell now\r\n");
