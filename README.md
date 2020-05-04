@@ -80,7 +80,7 @@ The GNU Arm Embedded Toolchain is also needed available on most operative
 systems packaging systems eg.
 
 ```bash
-gpt install gcc-arm-none-eabi
+apt install gcc-arm-none-eabi
 ```
 ### Building
 
@@ -90,6 +90,8 @@ To build the project jus run
 make
 ```
 This will download all the submodule needed projects and compile.
+
+When finished you'll find the binary application file under `./bin/nrf52dk/dp3t.elf`
 
 ### Flashing on device
 
