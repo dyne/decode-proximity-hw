@@ -1,3 +1,11 @@
+/*
+ * Copyright (C) 2020 Dyne.org foundation
+ *
+ * This file is subject to the terms and conditions of the Affero GNU
+ * General Public License (AGPL) version 3. See the file LICENSE for
+ * more details.
+ *
+ */
 #include "event/timeout.h"
 #include "nimble_scanner.h"
 #include "net/bluetil/ad.h"

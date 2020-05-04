@@ -1,3 +1,11 @@
+/*
+ * Copyright (C) 2020 Dyne.org foundation
+ *
+ * This file is subject to the terms and conditions of the Affero GNU
+ * General Public License (AGPL) version 3. See the file LICENSE for
+ * more details.
+ *
+ */
 #ifndef DP3T_CONFIG_H
 #define DP3T_CONFIG_H
 #include <stdint.h>
